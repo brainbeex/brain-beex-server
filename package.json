@@ -2,6 +2,7 @@
   "name": "brain-beex-server",
   "version": "1.0.0",
   "description": "This is BRAINBEEX server side web development folder.",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,7 +10,7 @@
     "start": "node src/server.js"
   },
   "repository": {
-    "type": "module",
+    "type": "git",
     "url": "git+https://github.com/brainbeex/brain-beex-server.git"
   },
   "keywords": [],
