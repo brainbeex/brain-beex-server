@@ -1,5 +1,7 @@
 import admin from "../../config/firebaseAdmin.js";
 import { generateToken } from "../../utils/generateToken.js";
+// import User from "../users/users.model.js";
+import User from "../../models/users/user.model.js";
 
 export const createJwt = async (req, res) => {
   try {
@@ -7,16 +9,26 @@ export const createJwt = async (req, res) => {
 
     const decoded = await admin.auth().verifyIdToken(idToken);
 
-    const token = generateToken(decoded);
+    // 🔥 check if exists
+    let user = await User.findOne({ email: decoded.email });
 
-    res.json({
-      success: true,
-      token,
+    if (!user) {
+      user = await User.create({
+        email: decoded.email,
+        name: decoded.name || "User",
+        photoURL: decoded.picture || "",
+        role: "student",
+      });
+    }
+
+    const token = generateToken({
+      uid: decoded.uid,
+      email: decoded.email,
+      role: user.role,
     });
+
+    res.json({ success: true, token });
   } catch (error) {
-    res.status(401).json({
-      success: false,
-      message: "Unauthorized",
-    });
+    res.status(401).json({ success: false, message: "Unauthorized" });
   }
 };
