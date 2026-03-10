@@ -5,6 +5,8 @@ import userRoutes from "./routes/users/user.routes.js";
 import errorHandler from "./middlewares/error.middleware.js";
 import authRoutes from "./modules/auth/auth.routes.js";
 import competitionRoutes from "./modules/competitions/competitions.routes.js";
+// import applicationRoutes from "../modules/applications/applications.routes.js";
+import applicationRoutes from "./modules/applications/applications.routes";
 
 const app = express();
 
@@ -16,6 +18,9 @@ app.use("/api/users", userRoutes);
 app.use(errorHandler);
 app.use("/api/auth", authRoutes);
 app.use("/api/competitions", competitionRoutes);
+
+// router.use("/applications", applicationRoutes);
+app.use("/api/applications", applicationRoutes);
 
 // health route
 app.get("/api/health", (req, res) => {
