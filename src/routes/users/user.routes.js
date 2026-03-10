@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post("/", userController.createUser);
 router.get("/", userController.getUsers);
-router.get("/:id", userController.getUser);
+
 // router.get("/private", verifyToken, (req, res) => {
 //   res.json({ message: "You are authenticated", user: req.user });
 // });
@@ -15,7 +15,9 @@ router.get(
   "/all-users",
   verifyToken,
   verifyAdmin,
-  getAllUsers
+  userController.getUsers
 );
+
+router.get("/:id", userController.getUser);
 
 export default router;

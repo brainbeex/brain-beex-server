@@ -4,6 +4,7 @@ import morgan from "morgan";
 import userRoutes from "./routes/users/user.routes.js";
 import errorHandler from "./middlewares/error.middleware.js";
 import authRoutes from "./modules/auth/auth.routes.js";
+import competitionRoutes from "./modules/competitions/competitions.routes.js";
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(morgan("dev"));
 app.use("/api/users", userRoutes);
 app.use(errorHandler);
 app.use("/api/auth", authRoutes);
+app.use("/api/competitions", competitionRoutes);
 
 // health route
 app.get("/api/health", (req, res) => {

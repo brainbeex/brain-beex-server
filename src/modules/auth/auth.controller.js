@@ -9,7 +9,7 @@ export const createJwt = async (req, res) => {
 
     const decoded = await admin.auth().verifyIdToken(idToken);
 
-    // 🔥 check if exists
+    // check if exists
     let user = await User.findOne({ email: decoded.email });
 
     if (!user) {
