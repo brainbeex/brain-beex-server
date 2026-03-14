@@ -43,13 +43,31 @@ export const getMyApplications = async (req, res) => {
   }
 };
 
+// export const getAllApplications = async (req, res) => {
+//   try {
+//     const applications = await applicationService.getAllApplications();
+
+//     res.json({
+//       success: true,
+//       data: applications,
+//     });
+//   } catch (error) {
+//     res.status(500).json({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// };
+
+
 export const getAllApplications = async (req, res) => {
   try {
-    const applications = await applicationService.getAllApplications();
+    const result = await applicationService.getAllApplications(req.query);
 
     res.json({
       success: true,
-      data: applications,
+      data: result.applications,
+      pagination: result.pagination,
     });
   } catch (error) {
     res.status(500).json({
@@ -58,6 +76,7 @@ export const getAllApplications = async (req, res) => {
     });
   }
 };
+
 
 export const updateApplicationStatus = async (req, res) => {
   try {

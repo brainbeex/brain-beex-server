@@ -11,15 +11,6 @@ export const createCompetition = async (req, res) => {
   });
 };
 
-// export const getCompetitions = async (req, res) => {
-//   const result = await competitionService.getCompetitions(req.query);
-
-//   res.json({
-//     success: true,
-//     ...result,
-//   });
-// };
-
 
 export const getCompetitions = async (req, res) => {
   const result = await competitionService.getCompetitions(req.query);

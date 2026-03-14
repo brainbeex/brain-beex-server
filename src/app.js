@@ -5,8 +5,8 @@ import userRoutes from "./routes/users/user.routes.js";
 import errorHandler from "./middlewares/error.middleware.js";
 import authRoutes from "./modules/auth/auth.routes.js";
 import competitionRoutes from "./modules/competitions/competitions.routes.js";
-// import applicationRoutes from "../modules/applications/applications.routes.js";
-import applicationRoutes from "./modules/applications/applications.routes";
+// import applicationRoutes from "./modules/applications/applications.routes.js";
+import applicationRoutes from "./modules/applications/applications.routes.js"
 
 const app = express();
 
@@ -15,7 +15,7 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
 app.use("/api/users", userRoutes);
-app.use(errorHandler);
+
 app.use("/api/auth", authRoutes);
 app.use("/api/competitions", competitionRoutes);
 
@@ -26,5 +26,7 @@ app.use("/api/applications", applicationRoutes);
 app.get("/api/health", (req, res) => {
   res.json({ status: "OK" });
 });
+
+app.use(errorHandler);
 
 export default app;
