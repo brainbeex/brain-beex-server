@@ -15,10 +15,23 @@ import admin from "firebase-admin";
 //   fs.readFileSync("./src/config/firebaseServiceKey.json", "utf8")
 // );
 
+// const serviceAccount = {
+//   type: "service_account",
+//   project_id: process.env.FIREBASE_PROJECT_ID,
+//   private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+//   client_email: process.env.FIREBASE_CLIENT_EMAIL,
+// };
+
+const privateKey = process.env.FIREBASE_PRIVATE_KEY;
+
+if (!privateKey) {
+  throw new Error("FIREBASE_PRIVATE_KEY is missing in environment variables");
+}
+
 const serviceAccount = {
   type: "service_account",
   project_id: process.env.FIREBASE_PROJECT_ID,
-  private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+  private_key: privateKey.replace(/\\n/g, "\n"),
   client_email: process.env.FIREBASE_CLIENT_EMAIL,
 };
 
