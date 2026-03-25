@@ -1,8 +1,10 @@
-import dotenv from "dotenv";
+// import dotenv from "dotenv";
 
-dotenv.config({ path: "./.env" }); 
+// dotenv.config({ path: "./.env" }); 
 
-console.log("ENV CHECK:", process.env.FIREBASE_PROJECT_ID);
+// console.log("ENV CHECK:", process.env.FIREBASE_PROJECT_ID);
+
+import "dotenv/config";
 
 import mongoose from "mongoose";
 import app from "./app.js";
