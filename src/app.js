@@ -10,7 +10,13 @@ import applicationRoutes from "./modules/applications/applications.routes.js"
 const app = express();
 
 // middlewares
-app.use(cors());
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://brainbeex.netlify.app"
+  ],
+  credentials: true
+}));
 app.use(express.json());
 app.use(morgan("dev"));
 app.use("/api/users", userRoutes);
