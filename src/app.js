@@ -17,10 +17,35 @@ app.use(cors({
   ],
   credentials: true
 }));
+
+
+// ✅ Manual headers (SECOND — IMPORTANT for Vercel)
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "https://brainbeex.netlify.app");
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  res.header(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+  );
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+
+  next();
+});
+
+
+// ✅ Other middlewares
 app.use(express.json());
 app.use(morgan("dev"));
-app.use("/api/users", userRoutes);
 
+// ✅ Routes
+app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/competitions", competitionRoutes);
 
