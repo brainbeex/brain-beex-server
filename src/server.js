@@ -1,9 +1,3 @@
-// import dotenv from "dotenv";
-
-// dotenv.config({ path: "./.env" }); 
-
-// console.log("ENV CHECK:", process.env.FIREBASE_PROJECT_ID);
-
 import "dotenv/config";
 
 import mongoose from "mongoose";

@@ -17,7 +17,7 @@ export const createJwt = async (req, res) => {
         email: decoded.email,
         name: decoded.name || "User",
         photoURL: decoded.picture || "",
-        role: "student",
+        role: "user",
       });
     }
 
