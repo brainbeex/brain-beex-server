@@ -29,6 +29,7 @@ export const createJwt = async (req, res) => {
 
     res.json({ success: true, token, role: user.role, });
   } catch (error) {
+    console.error("JWT ERROR", error);
     res.status(401).json({ success: false, message: "Unauthorized" });
   }
 };
