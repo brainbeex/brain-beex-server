@@ -25,6 +25,11 @@ app.use(
 app.use(express.json());
 app.use(morgan("dev"));
 
+app.get("/", (req, res) => {
+  res.send("BrainBeex Server Running 🚀");
+});
+
+
 // ✅ Routes
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
