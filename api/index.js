@@ -21,10 +21,20 @@
 // };
 
 
-export default function handler(req, res) {
-  console.log("🔥 DIRECT FUNCTION HIT");
+// export default function handler(req, res) {
+//   console.log("🔥 DIRECT FUNCTION HIT");
 
-  res.status(200).json({
-    status: "DIRECT_OK",
-  });
+//   res.status(200).json({
+//     status: "DIRECT_OK",
+//   });
+// }
+
+
+import app from "../src/app.js";
+import connectDB from "../src/config/db.js";
+
+export default async function handler(req, res) {
+  await connectDB();
+
+  return app(req, res); // ✅ NO serverless-http
 }
