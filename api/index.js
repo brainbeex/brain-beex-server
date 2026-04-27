@@ -32,32 +32,32 @@
 
 
 
-import app from "../src/app.js";
-import connectDB from "../src/config/db.js";
-
-export default async function handler(req, res) {
-  await connectDB();
-
-  return app(req, res); // ✅ NO serverless-http
-}
-
-
 // import app from "../src/app.js";
 // import connectDB from "../src/config/db.js";
 
 // export default async function handler(req, res) {
-//   // ✅ FORCE CORS HEADERS (CRITICAL FIX)
-//   res.setHeader("Access-Control-Allow-Origin", "https://brainbeex.netlify.app");
-//   res.setHeader("Access-Control-Allow-Origin", "*");
-//   res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
-//   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-
-//   // ✅ Handle preflight request
-//   if (req.method === "OPTIONS") {
-//     return res.status(200).end();
-//   }
-
 //   await connectDB();
 
-//   return app(req, res);
+//   return app(req, res); // ✅ NO serverless-http
 // }
+
+
+import app from "../src/app.js";
+import connectDB from "../src/config/db.js";
+
+export default async function handler(req, res) {
+  // ✅ FORCE CORS HEADERS (CRITICAL FIX)
+  res.setHeader("Access-Control-Allow-Origin", "https://brainbeex.netlify.app");
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+  // ✅ Handle preflight request
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+
+  await connectDB();
+
+  return app(req, res);
+}
