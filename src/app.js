@@ -19,37 +19,33 @@ const allowedOrigins = [
 // ✅ CORS setup
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true); // allow Postman
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
 
-// ✅ Preflight handling (Step 2)
-app.options(
-  "*",
-  cors({
-    origin: allowedOrigins,
-    credentials: true,
-  })
-);
+// // ✅ Preflight handling (Step 2)
+// app.options(
+//   "*",
+//   cors({
+//     origin: allowedOrigins,
+//     credentials: true,
+//   })
+// );
 
-// ✅ Vercel edge fix (Step 3)
 // app.use((req, res, next) => {
-//   const origin = req.headers.origin;
-
-//   if (allowedOrigins.includes(origin)) {
-//     res.header("Access-Control-Allow-Origin", origin);
-//   }
-
+//   res.header("Access-Control-Allow-Origin", req.headers.origin);
 //   res.header("Access-Control-Allow-Credentials", "true");
 //   next();
 // });
-
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", req.headers.origin);
-  res.header("Access-Control-Allow-Credentials", "true");
-  next();
-});
 
 // ✅ Middlewares
 app.use(express.json());
