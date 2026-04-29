@@ -10,48 +10,49 @@ import errorHandler from "./middlewares/error.middleware.js";
 
 const app = express();
 
-// // ✅ CORS FIRST (VERY IMPORTANT)
-// app.use(
-//   cors({
-//     origin: [
-//       "http://localhost:5173",
-//       "https://brainbeex.netlify.app",
-//     ],
-//     credentials: true,
-//   })
-// );
-
-
+// ✅ Allowed origins
 const allowedOrigins = [
   "http://localhost:5173",
   "https://brainbeex.netlify.app",
 ];
 
+// ✅ CORS setup
 app.use(
   cors({
-    origin: function (origin, callback) {
-      // allow requests with no origin (like Postman)
-      if (!origin) return callback(null, true);
-
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      } else {
-        return callback(new Error("CORS not allowed"));
-      }
-    },
+    origin: allowedOrigins,
     credentials: true,
   })
 );
 
+// ✅ Preflight handling (Step 2)
+app.options(
+  "*",
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  })
+);
+
+// ✅ Vercel edge fix (Step 3)
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+
+  if (allowedOrigins.includes(origin)) {
+    res.header("Access-Control-Allow-Origin", origin);
+  }
+
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
 
 // ✅ Middlewares
 app.use(express.json());
 app.use(morgan("dev"));
 
+// ✅ Root route
 app.get("/", (req, res) => {
   res.send("BrainBeex Server Running 🚀");
 });
-
 
 // ✅ Routes
 app.use("/api/users", userRoutes);
@@ -59,13 +60,12 @@ app.use("/api/auth", authRoutes);
 app.use("/api/competitions", competitionRoutes);
 app.use("/api/applications", applicationRoutes);
 
-// health route
+// ✅ Health route
 app.get("/api/health", (req, res) => {
   res.status(200).json({ status: "OK" });
 });
 
-// error handler
+// ✅ Error handler (must be last)
 app.use(errorHandler);
 
 export default app;
-
