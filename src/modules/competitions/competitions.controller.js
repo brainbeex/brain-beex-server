@@ -1,6 +1,7 @@
 import * as competitionService from "./competitions.service.js";
 
-import Competition from "../../models/competitions.model.js";
+// import Competition from "../../models/competitions.model.js";
+import Competition from "./competitions.model.js";
 
 export const createCompetition = async (req, res) => {
   try {
