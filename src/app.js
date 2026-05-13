@@ -10,48 +10,42 @@ import errorHandler from "./middlewares/error.middleware.js";
 
 const app = express();
 
-// ✅ Allowed frontend domains
 const allowedOrigins = [
   "http://localhost:5173",
   "https://brainbeex.netlify.app",
 ];
 
-// ✅ ONLY ONE CORS CONFIG
+// CORS
 app.use(
   cors({
     origin: allowedOrigins,
     credentials: true,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
-// ✅ Handle preflight
-app.options("*", cors());
-
-// ✅ Middlewares
+// Middlewares
 app.use(express.json());
 app.use(morgan("dev"));
 
-// ✅ Root
+// Root
 app.get("/", (req, res) => {
   res.send("BrainBeex Server Running 🚀");
 });
 
-// ✅ Health
+// Health
 app.get("/api/health", (req, res) => {
   res.status(200).json({
     status: "OK",
   });
 });
 
-// ✅ Routes
+// Routes
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/competitions", competitionRoutes);
 app.use("/api/applications", applicationRoutes);
 
-// ✅ Error handler
+// Error middleware
 app.use(errorHandler);
 
 export default app;
