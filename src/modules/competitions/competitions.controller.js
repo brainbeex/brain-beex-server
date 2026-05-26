@@ -1,11 +1,13 @@
 import * as competitionService from "./competitions.service.js";
 
-// import Competition from "../../models/competitions.model.js";
 import Competition from "./competitions.model.js";
 
 export const createCompetition = async (req, res) => {
   try {
-    const data = req.body;
+    const data = {
+      ...req.body,
+      createdBy: req.user.email,
+    };
 
     const competition = await Competition.create(data);
 
@@ -15,12 +17,13 @@ export const createCompetition = async (req, res) => {
     });
   } catch (error) {
     console.error("CREATE COMP ERROR:", error);
+
     res.status(500).json({
       success: false,
-      message: "Failed to create competition",
+      message: error.message,
     });
   }
-};
+}; 
 
 
 export const getCompetitions = async (req, res) => {
