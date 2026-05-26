@@ -1,27 +1,56 @@
 import * as applicationService from "./applications.service.js";
 
+// export const createApplication = async (req, res) => {
+//   try {
+//     const applicationData = {
+//       ...req.body,
+//       userId: req.user.id,
+//       userEmail: req.user.email,
+//     };
+
+//     const application = await applicationService.createApplication(
+//       applicationData
+//     );
+
+//     res.status(201).json({
+//       success: true,
+//       message: "Application submitted successfully",
+//       data: application,
+//     });
+//   } catch (error) {
+//     res.status(400).json({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// };
+
+
 export const createApplication = async (req, res) => {
   try {
-    const applicationData = {
+
+    const data = {
       ...req.body,
-      userId: req.user.id,
+      userId: req.user.uid,
       userEmail: req.user.email,
     };
 
-    const application = await applicationService.createApplication(
-      applicationData
-    );
+    const application = await Application.create(data);
 
     res.status(201).json({
       success: true,
-      message: "Application submitted successfully",
       data: application,
     });
+
   } catch (error) {
-    res.status(400).json({
+
+    console.error("APPLICATION ERROR:", error);
+
+    res.status(500).json({
       success: false,
       message: error.message,
     });
+
   }
 };
 
