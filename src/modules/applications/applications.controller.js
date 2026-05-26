@@ -1,4 +1,5 @@
 import * as applicationService from "./applications.service.js";
+import Application from "./applications.model.js";
 
 // export const createApplication = async (req, res) => {
 //   try {
