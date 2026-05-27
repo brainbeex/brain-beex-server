@@ -58,7 +58,7 @@ export const createApplication = async (req, res) => {
 export const getMyApplications = async (req, res) => {
   try {
     const applications = await applicationService.getMyApplications(
-      req.user.id
+      req.user.uid
     );
 
     res.json({
