@@ -62,6 +62,8 @@ export const getAllApplications = async (query) => {
 
   const applications = await Application.find(filter)
     .populate("competitionId", "title")
+    .populate("competitionId", "category")
+    .populate("competitionId", "organizer")
     .populate("userId", "name email")
     .sort({ createdAt: -1 })
     .skip(skip)
