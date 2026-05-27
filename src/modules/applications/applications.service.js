@@ -42,7 +42,45 @@ export const getMyApplications = async (userId) => {
   return applications;
 };
 
+// export const getAllApplications = async (query) => {
+//   const page = parseInt(query.page) || 1;
+//   const limit = parseInt(query.limit) || 10;
+
+//   const skip = (page - 1) * limit;
+
+//   const filter = {};
+
+//   if (query.status) {
+//     filter.status = query.status;
+//   }
+
+//   if (query.competitionId) {
+//     filter.competitionId = query.competitionId;
+//   }
+
+//   const total = await Application.countDocuments(filter);
+
+//   const applications = await Application.find(filter)
+//     .populate("competitionId", "title")
+//     .populate("userId", "name email")
+//     .sort({ createdAt: -1 })
+//     .skip(skip)
+//     .limit(limit);
+
+//   return {
+//     applications,
+//     pagination: {
+//       total,
+//       page,
+//       limit,
+//       totalPages: Math.ceil(total / limit),
+//     },
+//   };
+// };
+
+
 export const getAllApplications = async (query) => {
+
   const page = parseInt(query.page) || 1;
   const limit = parseInt(query.limit) || 10;
 
@@ -61,12 +99,16 @@ export const getAllApplications = async (query) => {
   const total = await Application.countDocuments(filter);
 
   const applications = await Application.find(filter)
-    .populate("competitionId", "title")
-    .populate("competitionId", "category")
-    .populate("competitionId", "organizer")
-    .populate("userId", "name email")
+
+    .populate({
+      path: "competitionId",
+      select: "title category organizer deadline",
+    })
+
     .sort({ createdAt: -1 })
+
     .skip(skip)
+
     .limit(limit);
 
   return {
