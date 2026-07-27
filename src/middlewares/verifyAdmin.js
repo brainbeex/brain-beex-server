@@ -1,4 +1,4 @@
-import User from "../models/users/user.model.js"
+import User from "../modules/users/user.model.js";
 
 const verifyAdmin = async (req, res, next) => {
 
