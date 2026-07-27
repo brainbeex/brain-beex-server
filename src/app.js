@@ -3,7 +3,7 @@ import cors from "cors";
 import morgan from "morgan";
 
 import userRoutes from "./routes/users/user.routes.js";
-import authRoutes from "./modules/auth/auth.routes.js";
+import authRoutes from "./modules/auth/auth.route.js";
 import competitionRoutes from "./modules/competitions/competitions.routes.js";
 import applicationRoutes from "./modules/applications/applications.routes.js";
 import errorHandler from "./middlewares/error.middleware.js";
