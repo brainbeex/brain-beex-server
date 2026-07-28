@@ -1,12 +1,11 @@
 import Application from "./applications.model.js";
-import Competition from "../competitions/competitions.model.js";
-
+import { getCompetitionById } from "../competitions/competitions.service.js"; // Centralized service import
 
 export const createApplication = async (data) => {
   const { competitionId, userId } = data;
 
-  // Check if competition exists
-  const competition = await Competition.findById(competitionId);
+  // Check if competition exists via the proper Service Layer channel
+  const competition = await getCompetitionById(competitionId);
 
   if (!competition) {
     throw new Error("Competition not found");
@@ -33,7 +32,6 @@ export const createApplication = async (data) => {
   return await Application.create(data);
 };
 
-
 export const getMyApplications = async (userId) => {
   const applications = await Application.find({ userId })
     .populate("competitionId", "title organizer deadline")
@@ -42,48 +40,9 @@ export const getMyApplications = async (userId) => {
   return applications;
 };
 
-// export const getAllApplications = async (query) => {
-//   const page = parseInt(query.page) || 1;
-//   const limit = parseInt(query.limit) || 10;
-
-//   const skip = (page - 1) * limit;
-
-//   const filter = {};
-
-//   if (query.status) {
-//     filter.status = query.status;
-//   }
-
-//   if (query.competitionId) {
-//     filter.competitionId = query.competitionId;
-//   }
-
-//   const total = await Application.countDocuments(filter);
-
-//   const applications = await Application.find(filter)
-//     .populate("competitionId", "title")
-//     .populate("userId", "name email")
-//     .sort({ createdAt: -1 })
-//     .skip(skip)
-//     .limit(limit);
-
-//   return {
-//     applications,
-//     pagination: {
-//       total,
-//       page,
-//       limit,
-//       totalPages: Math.ceil(total / limit),
-//     },
-//   };
-// };
-
-
 export const getAllApplications = async (query) => {
-
   const page = parseInt(query.page) || 1;
   const limit = parseInt(query.limit) || 10;
-
   const skip = (page - 1) * limit;
 
   const filter = {};
@@ -99,16 +58,12 @@ export const getAllApplications = async (query) => {
   const total = await Application.countDocuments(filter);
 
   const applications = await Application.find(filter)
-
     .populate({
       path: "competitionId",
       select: "title category organizer deadline",
     })
-
     .sort({ createdAt: -1 })
-
     .skip(skip)
-
     .limit(limit);
 
   return {
@@ -134,6 +89,5 @@ export const updateApplicationStatus = async (id, data) => {
 
 export const deleteApplication = async (id) => {
   const result = await Application.findByIdAndDelete(id);
-
   return result;
 };

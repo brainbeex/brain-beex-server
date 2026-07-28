@@ -1,145 +1,66 @@
 import * as applicationService from "./applications.service.js";
-import Application from "./applications.model.js";
+import asyncHandler from "../../utils/asyncHandler.js"; // Handled default import correctly
 
-// export const createApplication = async (req, res) => {
-//   try {
-//     const applicationData = {
-//       ...req.body,
-//       userId: req.user.id,
-//       userEmail: req.user.email,
-//     };
+// CREATE APPLICATION
+export const createApplication = asyncHandler(async (req, res) => {
+  const data = {
+    ...req.body,
+    userId: req.user.uid,
+    userEmail: req.user.email,
+  };
 
-//     const application = await applicationService.createApplication(
-//       applicationData
-//     );
+  // Fixed bug: Routed data through service layer to trigger deadline and duplicate validations
+  const application = await applicationService.createApplication(data);
 
-//     res.status(201).json({
-//       success: true,
-//       message: "Application submitted successfully",
-//       data: application,
-//     });
-//   } catch (error) {
-//     res.status(400).json({
-//       success: false,
-//       message: error.message,
-//     });
-//   }
-// };
+  res.status(201).json({
+    success: true,
+    data: application,
+  });
+});
 
+// GET CURRENT USER'S APPLICATIONS
+export const getMyApplications = asyncHandler(async (req, res) => {
+  const applications = await applicationService.getMyApplications(
+    req.user.uid
+  );
 
-export const createApplication = async (req, res) => {
-  try {
+  res.json({
+    success: true,
+    data: applications,
+  });
+});
 
-    const data = {
-      ...req.body,
-      userId: req.user.uid,
-      userEmail: req.user.email,
-    };
+// GET ALL SYSTEM APPLICATIONS
+export const getAllApplications = asyncHandler(async (req, res) => {
+  const result = await applicationService.getAllApplications(req.query);
 
-    const application = await Application.create(data);
+  res.json({
+    success: true,
+    data: result.applications,
+    pagination: result.pagination,
+  });
+});
 
-    res.status(201).json({
-      success: true,
-      data: application,
-    });
+// UPDATE APPLICATION STATUS
+export const updateApplicationStatus = asyncHandler(async (req, res) => {
+  const application = await applicationService.updateApplicationStatus(
+    req.params.id,
+    req.body
+  );
 
-  } catch (error) {
+  res.json({
+    success: true,
+    message: "Application updated successfully",
+    data: application,
+  });
+});
 
-    console.error("APPLICATION ERROR:", error);
+// DELETE APPLICATION
+export const deleteApplication = asyncHandler(async (req, res) => {
+  await applicationService.deleteApplication(req.params.id);
 
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-
-  }
-};
-
-export const getMyApplications = async (req, res) => {
-  try {
-    const applications = await applicationService.getMyApplications(
-      req.user.uid
-    );
-
-    res.json({
-      success: true,
-      data: applications,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-};
-
-// export const getAllApplications = async (req, res) => {
-//   try {
-//     const applications = await applicationService.getAllApplications();
-
-//     res.json({
-//       success: true,
-//       data: applications,
-//     });
-//   } catch (error) {
-//     res.status(500).json({
-//       success: false,
-//       message: error.message,
-//     });
-//   }
-// };
-
-
-export const getAllApplications = async (req, res) => {
-  try {
-    const result = await applicationService.getAllApplications(req.query);
-
-    res.json({
-      success: true,
-      data: result.applications,
-      pagination: result.pagination,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-};
-
-
-export const updateApplicationStatus = async (req, res) => {
-  try {
-    const application = await applicationService.updateApplicationStatus(
-      req.params.id,
-      req.body
-    );
-
-    res.json({
-      success: true,
-      message: "Application updated successfully",
-      data: application,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-};
-
-export const deleteApplication = async (req, res) => {
-  try {
-    await applicationService.deleteApplication(req.params.id);
-
-    res.json({
-      success: true,
-      message: "Application deleted successfully",
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-};
+  res.json({
+    success: true,
+    message: "Application deleted successfully",
+  });
+});
