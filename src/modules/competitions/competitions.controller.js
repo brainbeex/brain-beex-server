@@ -1,32 +1,24 @@
 import * as competitionService from "./competitions.service.js";
+import asyncHandler from "../../utils/asyncHandler.js";
 
-import Competition from "./competitions.model.js";
+// CREATE A COMPETITION
+export const createCompetition = asyncHandler(async (req, res) => {
+  const data = {
+    ...req.body,
+    createdBy: req.user.email,
+  };
 
-export const createCompetition = async (req, res) => {
-  try {
-    const data = {
-      ...req.body,
-      createdBy: req.user.email,
-    };
+  // Delegating database operations directly to the service layer
+  const competition = await competitionService.createCompetition(data);
 
-    const competition = await Competition.create(data);
+  res.status(201).json({
+    success: true,
+    data: competition,
+  });
+}); 
 
-    res.status(201).json({
-      success: true,
-      data: competition,
-    });
-  } catch (error) {
-    console.error("CREATE COMP ERROR:", error);
-
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-}; 
-
-
-export const getCompetitions = async (req, res) => {
+// GET ALL COMPETITIONS WITH PAGINATION/FILTERS
+export const getCompetitions = asyncHandler(async (req, res) => {
   const result = await competitionService.getCompetitions(req.query);
 
   res.json({
@@ -34,10 +26,10 @@ export const getCompetitions = async (req, res) => {
     data: result.competitions,
     pagination: result.pagination,
   });
-};
+});
 
-
-export const getCompetition = async (req, res) => {
+// GET A SINGLE COMPETITION BY ID
+export const getCompetition = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
   const competition = await competitionService.getCompetitionById(id);
@@ -46,23 +38,22 @@ export const getCompetition = async (req, res) => {
     success: true,
     data: competition,
   });
-};
+});
 
-export const updateCompetition = async (req, res) => {
+// UPDATE AN EXISTING COMPETITION
+export const updateCompetition = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
-  const updated = await competitionService.updateCompetition(
-    id,
-    req.body
-  );
+  const updated = await competitionService.updateCompetition(id, req.body);
 
   res.json({
     success: true,
     data: updated,
   });
-};
+});
 
-export const deleteCompetition = async (req, res) => {
+// DELETE A COMPETITION
+export const deleteCompetition = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
   await competitionService.deleteCompetition(id);
@@ -71,4 +62,4 @@ export const deleteCompetition = async (req, res) => {
     success: true,
     message: "Competition deleted",
   });
-};
+});

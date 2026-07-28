@@ -1,7 +1,11 @@
 import Competition from "./competitions.model.js";
 
-export const createCompetition = (data) => {
-  return Competition.create(data);
+export const createCompetition = async (data) => {
+  if (new Date(data.deadline) < new Date()) {
+    throw new Error("Deadline cannot be in the past.");
+  }
+
+  return await Competition.create(data);
 };
 
 
