@@ -1,12 +1,12 @@
 import * as userService from "./user.service.js";
 import asyncHandler from "../../utils/asyncHandler.js";
-import { successResponse } from "../../utils/response.js";
+import sendResponse from "../../shared/sendResponse.js";
 import mongoose from "mongoose";
 
 
 export const createUser = asyncHandler(async (req, res) => {
   const user = await userService.createUser(req.body);
-  successResponse(res, user, 201);
+  sendResponse(res, user, 201);
 });
 
 export const getUsers = asyncHandler(async (req, res) => {
@@ -38,5 +38,5 @@ export const getUser = asyncHandler(async (req, res) => {
     throw err;
   }
 
-  successResponse(res, user);
+  sendResponse(res, user);
 });

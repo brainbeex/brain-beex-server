@@ -1,5 +1,6 @@
 import * as competitionService from "./competitions.service.js";
 import asyncHandler from "../../utils/asyncHandler.js";
+import sendResponse from "../../shared/sendResponse.js";
 
 // CREATE A COMPETITION
 export const createCompetition = asyncHandler(async (req, res) => {
@@ -11,8 +12,12 @@ export const createCompetition = asyncHandler(async (req, res) => {
   // Delegating database operations directly to the service layer
   const competition = await competitionService.createCompetition(data);
 
-  res.status(201).json({
-    success: true,
+  // res.status(201).json({
+  //   success: true,
+  //   data: competition,
+  // });
+  sendResponse(res, {
+    statusCode: 201,
     data: competition,
   });
 }); 
@@ -21,8 +26,13 @@ export const createCompetition = asyncHandler(async (req, res) => {
 export const getCompetitions = asyncHandler(async (req, res) => {
   const result = await competitionService.getCompetitions(req.query);
 
-  res.json({
-    success: true,
+  // res.json({
+  //   success: true,
+  //   data: result.competitions,
+  //   pagination: result.pagination,
+  // });
+  sendResponse(res, {
+    statusCode: 200,
     data: result.competitions,
     pagination: result.pagination,
   });
