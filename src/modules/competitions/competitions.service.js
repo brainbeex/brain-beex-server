@@ -1,8 +1,10 @@
 import Competition from "./competitions.model.js";
+import ApiError from "../../shared/ApiError.js";
 
 export const createCompetition = async (data) => {
   if (new Date(data.deadline) < new Date()) {
-    throw new Error("Deadline cannot be in the past.");
+    // throw new Error("Deadline cannot be in the past.");
+    throw new ApiError(400, "Deadline cannot be in the past.");
   }
 
   return await Competition.create(data);
@@ -67,14 +69,29 @@ export const getCompetitions = async (query) => {
 
 
 
-export const getCompetitionById = (id) => {
-  return Competition.findById(id);
+export const getCompetitionById = async (id) => {
+  const competition = await Competition.findById(id);
+  if (!competition) {
+    throw new ApiError(404, "Competition not found");
+  }
+  return competition;
+  // return Competition.findById(id);
 };
 
-export const updateCompetition = (id, data) => {
-  return Competition.findByIdAndUpdate(id, data, { new: true });
+export const updateCompetition = async (id, data) => {
+  const updated = await Competition.findByIdAndUpdate(id, data, { new: true });
+  if (!updated) {
+    throw new ApiError(404, "Competition not found to update");
+  }
+  return updated;
+  // return Competition.findByIdAndUpdate(id, data, { new: true });
 };
 
-export const deleteCompetition = (id) => {
-  return Competition.findByIdAndDelete(id);
+export const deleteCompetition = async (id) => {
+  const result = await Competition.findByIdAndDelete(id);
+  if (!result) {
+    throw new ApiError(404, "Competition not found to delete");
+  }
+  return result;
+  // return Competition.findByIdAndDelete(id);
 };

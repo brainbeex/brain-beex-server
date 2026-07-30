@@ -1,5 +1,6 @@
 import Application from "./applications.model.js";
 import { getCompetitionById } from "../competitions/competitions.service.js"; // Centralized service import
+import ApiError from "../../shared/ApiError.js";
 
 export const createApplication = async (data) => {
   const { competitionId, userId } = data;
@@ -8,14 +9,16 @@ export const createApplication = async (data) => {
   const competition = await getCompetitionById(competitionId);
 
   if (!competition) {
-    throw new Error("Competition not found");
+    // throw new Error("Competition not found");
+    throw new ApiError(404, "Competition not found");
   }
 
   // Check deadline
   const now = new Date();
 
   if (new Date(competition.deadline) < now) {
-    throw new Error("Application deadline has passed");
+    // throw new Error("Application deadline has passed");
+    throw new ApiError(400, "Application deadline has passed");
   }
 
   // Prevent duplicate application
@@ -25,7 +28,8 @@ export const createApplication = async (data) => {
   });
 
   if (existingApplication) {
-    throw new Error("You already applied to this competition");
+    // throw new Error("You already applied to this competition");
+    throw new ApiError(409, "You already applied to this competition");
   }
 
   // Create application
@@ -83,11 +87,17 @@ export const updateApplicationStatus = async (id, data) => {
     data,
     { new: true }
   );
+  if (!application) {
+    throw new ApiError(404, "Application not found");
+  }
 
   return application;
 };
 
 export const deleteApplication = async (id) => {
   const result = await Application.findByIdAndDelete(id);
+  if (!result) {
+    throw new ApiError(404, "Application not found");
+  }
   return result;
 };
