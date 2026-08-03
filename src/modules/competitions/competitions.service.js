@@ -1,5 +1,8 @@
 import Competition from "./competitions.model.js";
+import BaseService from "../../shared/BaseService.js";
 import ApiError from "../../shared/ApiError.js";
+
+const baseService = new BaseService(Competition);
 
 export const createCompetition = async (data) => {
   if (new Date(data.deadline) < new Date()) {
@@ -7,7 +10,7 @@ export const createCompetition = async (data) => {
     throw new ApiError(400, "Deadline cannot be in the past.");
   }
 
-  return await Competition.create(data);
+  return await baseService.create(data);
 };
 
 
@@ -70,7 +73,7 @@ export const getCompetitions = async (query) => {
 
 
 export const getCompetitionById = async (id) => {
-  const competition = await Competition.findById(id);
+  const competition = await baseService.findById(id);
   if (!competition) {
     throw new ApiError(404, "Competition not found");
   }
@@ -79,7 +82,7 @@ export const getCompetitionById = async (id) => {
 };
 
 export const updateCompetition = async (id, data) => {
-  const updated = await Competition.findByIdAndUpdate(id, data, { new: true });
+  const updated = await baseService.update(id, data, { new: true });
   if (!updated) {
     throw new ApiError(404, "Competition not found to update");
   }
@@ -88,7 +91,7 @@ export const updateCompetition = async (id, data) => {
 };
 
 export const deleteCompetition = async (id) => {
-  const result = await Competition.findByIdAndDelete(id);
+  const result = await baseService.delete(id);
   if (!result) {
     throw new ApiError(404, "Competition not found to delete");
   }

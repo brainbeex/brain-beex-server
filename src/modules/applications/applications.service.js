@@ -1,6 +1,9 @@
 import Application from "./applications.model.js";
+import BaseService from "../../shared/BaseService.js";
 import { getCompetitionById } from "../competitions/competitions.service.js"; // Centralized service import
 import ApiError from "../../shared/ApiError.js";
+
+const baseService = new BaseService(Application);
 
 export const createApplication = async (data) => {
   const { competitionId, userId } = data;
@@ -82,7 +85,7 @@ export const getAllApplications = async (query) => {
 };
 
 export const updateApplicationStatus = async (id, data) => {
-  const application = await Application.findByIdAndUpdate(
+  const application = await baseService.update(
     id,
     data,
     { new: true }
@@ -95,7 +98,7 @@ export const updateApplicationStatus = async (id, data) => {
 };
 
 export const deleteApplication = async (id) => {
-  const result = await Application.findByIdAndDelete(id);
+  const result = await baseService.delete(id);
   if (!result) {
     throw new ApiError(404, "Application not found");
   }

@@ -1,15 +1,18 @@
 import User from "./user.model.js";
+import BaseService from "../../shared/BaseService.js";
+
+const baseService = new BaseService(User);
 
 export const createUser = async (data) => {
-  return await User.create(data);
+  return await baseService.create(data);
 };
 
 export const getUsers = async () => {
-  return await User.find();
+  return await baseService.find();
 };
 
 export const getUserById = async (id) => {
-  return await User.findById(id);
+  return await baseService.findById(id) ;
 };
 
 // New centralized function added for the service layer pattern
@@ -19,7 +22,7 @@ export const findOrCreateUser = async (firebaseUser) => {
   });
 
   if (!user) {
-    user = await User.create({
+    user = await baseService.create({
       email: firebaseUser.email,
       name: firebaseUser.name || "User",
       photoURL: firebaseUser.picture || "",
