@@ -6,7 +6,10 @@ import verifyAdmin from "../../middlewares/verifyAdmin.js";
 
 // 1. Import the validation helper and validation rule
 import { validate } from "../../middlewares/validate.js";
-import { createCompetitionSchema } from "./competitions.validation.js";
+import { 
+  createCompetitionSchema,
+  updateCompetitionSchema, 
+} from "./competitions.validation.js";
 
 const router = express.Router();
 
@@ -27,6 +30,7 @@ router.patch(
   "/:id",
   verifyToken,
   verifyAdmin,
+  validate(updateCompetitionSchema),
   controller.updateCompetition
 );
 
