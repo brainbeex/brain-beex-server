@@ -1,20 +1,12 @@
-import dotenv from "dotenv";
-dotenv.config();
-
 import admin from "firebase-admin";
+import { env } from "./env.js"; // Import validated env data
 
 if (!admin.apps.length) {
-  const privateKey = process.env.FIREBASE_PRIVATE_KEY;
-
-  if (!privateKey) {
-    throw new Error("FIREBASE_PRIVATE_KEY is missing");
-  }
-
   const serviceAccount = {
     type: "service_account",
-    project_id: process.env.FIREBASE_PROJECT_ID,
-    private_key: privateKey.replace(/\\n/g, "\n"),
-    client_email: process.env.FIREBASE_CLIENT_EMAIL,
+    project_id: env.FIREBASE_PROJECT_ID,
+    private_key: env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+    client_email: env.FIREBASE_CLIENT_EMAIL,
   };
 
   admin.initializeApp({

@@ -9,16 +9,18 @@ const envSchema = z.object({
   PORT: z.string().default("5000"),
   MONGO_URI: z.string({ required_error: "MONGO_URI is missing from your environment variables" }).url(),
   JWT_SECRET: z.string({ required_error: "JWT_SECRET is missing from your environment variables" }).min(10, "JWT_SECRET must be at least 10 characters long"),
-  // Add your Firebase configurations here as well if needed
+  FIREBASE_PROJECT_ID: z.string({ required_error: "FIREBASE_PROJECT_ID is missing from your environment variables" }),
+  FIREBASE_CLIENT_EMAIL: z.string({ required_error: "FIREBASE_CLIENT_EMAIL is missing from your environment variables" }).email(),
+  FIREBASE_PRIVATE_KEY: z.string({ required_error: "FIREBASE_PRIVATE_KEY is missing from your environment variables" }),
 });
 
 // Run validation safely
 const envParse = envSchema.safeParse(process.env);
 
 if (!envParse.success) {
-  console.error("Invalid environment configuration options:");
+  console.error("❌ Invalid environment configuration options:");
   envParse.error.errors.forEach((err) => {
-    console.error(`[${err.path.join(".")}]: ${err.message}`);
+    console.error(`   👉 [${err.path.join(".")}]: ${err.message}`);
   });
   process.exit(1); // Force terminate server immediately due to misconfiguration
 }

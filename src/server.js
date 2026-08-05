@@ -1,19 +1,21 @@
-import "dotenv/config";
-import mongoose from "mongoose";
+import { env } from "./config/env.js"; 
 import app from "./app.js";
-import { env } from "./config/env.js";
+import connectDB from "./config/db.js";
 
-const PORT = process.env.PORT || 5000;
+const PORT = env.PORT;
 
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log("✅ MongoDB connected");
-
+// Establish database hookups and launch server listener cleanly
+const startServer = async () => {
+  try {
+    await connectDB();
+    
     app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
+      console.log(`🚀 Server processing operations in [${env.NODE_ENV}] mode on port ${PORT}`);
     });
-  })
-  .catch((error) => {
-    console.error(error);
-  });
+  } catch (error) {
+    console.error("❌ Server startup critical failure:", error);
+    process.exit(1);
+  }
+};
+
+startServer();
