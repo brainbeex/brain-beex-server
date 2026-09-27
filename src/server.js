@@ -1,10 +1,10 @@
-import { env } from "./config/env.js"; 
+import env from "./config/env.js"; // 1. Imported env config at line 1 (using default export)
 import app from "./app.js";
 import connectDB from "./config/db.js";
 
-const PORT = env.PORT;
+// 2. Transformed the port lookup to rely on our validated configuration settings
+const PORT = Number(env.PORT);
 
-// Establish database hookups and launch server listener cleanly
 const startServer = async () => {
   try {
     await connectDB();
