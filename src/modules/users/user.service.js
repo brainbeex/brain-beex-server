@@ -12,17 +12,27 @@ export const getUsers = async () => {
 };
 
 export const getUserById = async (id) => {
-  return await baseService.findById(id) ;
+  return await baseService.findById(id);
 };
 
-// New centralized function added for the service layer pattern
+// Updated function to check and save the stable Firebase identity link
 export const findOrCreateUser = async (firebaseUser) => {
+  // 1. Primary lookup using the stable Firebase identifier
   let user = await User.findOne({
-    email: firebaseUser.email,
+    firebaseUid: firebaseUser.uid,
   });
 
+  // 2. Secondary fallback lookup checking the email address matches
+  if (!user) {
+    user = await User.findOne({
+      email: firebaseUser.email,
+    });
+  }
+
+  // 3. Create the user record through BaseService if it doesn't exist yet
   if (!user) {
     user = await baseService.create({
+      firebaseUid: firebaseUser.uid,
       email: firebaseUser.email,
       name: firebaseUser.name || "User",
       photoURL: firebaseUser.picture || "",

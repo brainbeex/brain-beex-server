@@ -8,7 +8,13 @@ import { createUserSchema } from "./user.validation.js";
 
 const router = express.Router();
 
-router.post("/", validate(createUserSchema), userController.createUser);
+// router.post("/", validate(createUserSchema), userController.createUser);
+router.post(
+  "/", 
+  verifyToken,                 // ← Intercepts and requires application authentication first
+  validate(createUserSchema), 
+  userController.createUser
+);
 router.get("/", userController.getUsers);
 
 router.get(
