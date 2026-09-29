@@ -1,6 +1,5 @@
 import admin from "../../config/firebaseAdmin.js";
 import { generateToken } from "../../utils/generateToken.js";
-// import User from "../users/user.model.js";
 import { findOrCreateUser } from "../users/user.service.js";
 
 export const createJwtService = async (idToken) => {
@@ -11,25 +10,16 @@ export const createJwtService = async (idToken) => {
   // Verify Firebase token
   const decoded = await admin.auth().verifyIdToken(idToken);
 
-  // Clean, centralized service layer call instead of direct DB queries
+  if (!decoded.uid || !decoded.email) {
+    const error = new Error("Invalid Firebase user information");
+    error.statusCode = 401;
+    throw error;
+  }
+
+  // Find existing user or create a new one
   const user = await findOrCreateUser(decoded);
 
-  // // Check if user exists
-  // let user = await User.findOne({
-  //   email: decoded.email,
-  // });
-
-  // // Create user if not found
-  // if (!user) {
-  //   user = await User.create({
-  //     email: decoded.email,
-  //     name: decoded.name || "User",
-  //     photoURL: decoded.picture || "",
-  //     role: "user",
-  //   });
-  // }
-
-  // Generate JWT
+  // Generate application JWT
   const token = generateToken({
     uid: decoded.uid,
     email: decoded.email,

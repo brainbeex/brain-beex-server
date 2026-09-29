@@ -1,5 +1,6 @@
 import { z } from "zod";
 
-export const loginSchema = z.object({
-  idToken: z.string({ required_error: "Firebase ID token is required" }).min(1),
+// Validates that the request body contains a non-empty idToken string
+export const createJwtSchema = z.object({
+  idToken: z.string().min(1, "Firebase ID token is required"),
 });
