@@ -17,19 +17,28 @@ export const getUserById = async (id) => {
 
 // Updated function to check and save the stable Firebase identity link
 export const findOrCreateUser = async (firebaseUser) => {
-  // 1. Primary lookup using the stable Firebase identifier
+  // 1. Check if a user with this specific Firebase UID already exists
   let user = await User.findOne({
     firebaseUid: firebaseUser.uid,
   });
 
-  // 2. Secondary fallback lookup checking the email address matches
+  // 2. Fallback to lookup by email if UID isn't bound yet
   if (!user) {
     user = await User.findOne({
       email: firebaseUser.email,
     });
+
+    // 🛑 SECURITY CHECK: If user found by email already has a different Firebase UID, reject immediately
+    if (user && user.firebaseUid && user.firebaseUid !== firebaseUser.uid) {
+      const error = new Error(
+        "Firebase account does not match the existing user account"
+      );
+      error.statusCode = 403;
+      throw error;
+    }
   }
 
-  // 3. Create the user record through BaseService if it doesn't exist yet
+  // 3. Create a new user if no existing account is found at all
   if (!user) {
     user = await baseService.create({
       firebaseUid: firebaseUser.uid,
