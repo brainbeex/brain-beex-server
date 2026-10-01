@@ -15,8 +15,8 @@ router.post(
   validate(createUserSchema), 
   userController.createUser
 );
-router.get("/", userController.getUsers);
 
+// Secured endpoint restricted to administrators for listing system members
 router.get(
   "/all-users",
   verifyToken,
