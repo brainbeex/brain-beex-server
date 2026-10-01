@@ -4,7 +4,10 @@ import BaseService from "../../shared/BaseService.js";
 const baseService = new BaseService(User);
 
 export const createUser = async (data) => {
-  return await baseService.create(data);
+  return await baseService.create({
+    ...data,
+    role: "user", // 🔒 DEFENSE-IN-DEPTH: Overwrites any input payload attempt to inject "admin" privilege
+  });
 };
 
 export const getUsers = async () => {
