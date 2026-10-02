@@ -8,15 +8,13 @@ import { createUserSchema } from "./user.validation.js";
 
 const router = express.Router();
 
-// router.post("/", validate(createUserSchema), userController.createUser);
 router.post(
-  "/", 
-  verifyToken,                 // ← Intercepts and requires application authentication first
-  validate(createUserSchema), 
+  "/",
+  verifyToken,
+  validate(createUserSchema),
   userController.createUser
 );
 
-// Secured endpoint restricted to administrators for listing system members
 router.get(
   "/all-users",
   verifyToken,
@@ -26,7 +24,8 @@ router.get(
 
 router.get(
   "/:id",
-  verifyToken, 
-  userController.getUser);
+  verifyToken,
+  userController.getUser
+);
 
 export default router;
