@@ -3,21 +3,22 @@ import asyncHandler from "../../utils/asyncHandler.js";
 import sendResponse from "../../shared/sendResponse.js";
 import mongoose from "mongoose";
 
-
 export const createUser = asyncHandler(async (req, res) => {
   const user = await userService.createUser(req.body);
-  sendResponse(res, user, 201);
+  
+  sendResponse(res, {
+    statusCode: 201,
+    data: user,
+  });
 });
 
 export const getUsers = asyncHandler(async (req, res) => {
-
   const users = await userService.getUsers();
 
-  res.json({
-    success: true,
-    data: users
+  sendResponse(res, {
+    statusCode: 200,
+    data: users,
   });
-
 });
 
 export const getUser = asyncHandler(async (req, res) => {
@@ -26,7 +27,7 @@ export const getUser = asyncHandler(async (req, res) => {
   // Validate ObjectId first
   if (!mongoose.Types.ObjectId.isValid(id)) {
     const err = new Error("Invalid user id");
-    err.status = 400;
+    err.statusCode = 400; // 🛠️ FIXED: Swapped 'status' to 'statusCode' to match global middleware
     throw err;
   }
 
@@ -34,9 +35,12 @@ export const getUser = asyncHandler(async (req, res) => {
 
   if (!user) {
     const err = new Error("User not found");
-    err.status = 404;
+    err.status = 404; // Leave this for now as instructed, we will update it in the next steps
     throw err;
   }
 
-  sendResponse(res, user);
+  sendResponse(res, {
+    statusCode: 200,
+    data: user,
+  });
 });
