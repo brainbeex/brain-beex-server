@@ -11,21 +11,21 @@ const verifyToken = (req, res, next) => {
     });
   }
 
-  // 1. Explicitly destructure both the scheme and token elements cleanly
   const [scheme, token] = authHeader.split(" ");
 
   // 🚀 BYPASS CHECK: Keep your mock developer configuration alive for local testing
   if (env.NODE_ENV !== "production" && token === "dev-token") {
+    // 🛠️ FIXED: Added role: "admin" to align the mock payload format with real JWT entries
     req.user = {
       uid: "mock_developer_12345",
       email: "developer@brainbeex.com",
+      role: "admin", 
       name: "Mock Developer",
       picture: "https://placeholder.com",
     };
     return next();
   }
 
-  // 2. Validate that the format is strictly "Bearer <JWT>"
   if (scheme !== "Bearer" || !token) {
     return res.status(401).json({
       success: false,
