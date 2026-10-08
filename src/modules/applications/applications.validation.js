@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-// Strengthened Zod schema reflecting the required MongoDB application model constraints
 export const createApplicationSchema = z.object({
   competitionId: z
     .string({ required_error: "Competition ID is required" })
@@ -13,5 +12,14 @@ export const createApplicationSchema = z.object({
   message: z
     .string()
     .max(2000, "Message must be at most 2000 characters")
+    .optional(),
+});
+
+export const updateApplicationSchema = z.object({
+  status: z.enum(["pending", "accepted", "rejected"]).optional(),
+
+  reviewNote: z
+    .string()
+    .max(2000, "Review note must be at most 2000 characters")
     .optional(),
 });
