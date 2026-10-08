@@ -5,7 +5,10 @@ import verifyAdmin from "../../middlewares/verifyAdmin.js";
 
 // Import validation items
 import { validate } from "../../middlewares/validate.js";
-import { createApplicationSchema } from "./applications.validation.js";
+import { 
+  createApplicationSchema,
+  updateApplicationSchema, 
+} from "./applications.validation.js";
 
 const router = express.Router();
 
@@ -33,6 +36,7 @@ router.patch(
   "/:id",
   verifyToken,
   verifyAdmin,
+  validate(updateApplicationSchema),
   applicationController.updateApplicationStatus
 );
 
