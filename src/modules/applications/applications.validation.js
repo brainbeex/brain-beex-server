@@ -15,11 +15,18 @@ export const createApplicationSchema = z.object({
     .optional(),
 });
 
-export const updateApplicationSchema = z.object({
-  status: z.enum(["pending", "accepted", "rejected"]).optional(),
+export const updateApplicationSchema = z
+  .object({
+    status: z.enum(["pending", "accepted", "rejected"]).optional(),
 
-  reviewNote: z
-    .string()
-    .max(2000, "Review note must be at most 2000 characters")
-    .optional(),
-});
+    reviewNote: z
+      .string()
+      .max(2000, "Review note must be at most 2000 characters")
+      .optional(),
+  })
+  .refine(
+    (data) => data.status !== undefined || data.reviewNote !== undefined,
+    {
+      message: "At least one field is required for update",
+    }
+  );
